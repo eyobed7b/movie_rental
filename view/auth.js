@@ -31,4 +31,4 @@ function validate(user) {
 }
 
 
-module.exports = route
+module.exports = routew
