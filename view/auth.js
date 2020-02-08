@@ -1,21 +1,26 @@
 const express = require('express')
 const route = express.Router()
 const Joi = require('joi')
+const bcrypt = require('bcrypt')
+const _ = require('lodash')
 const { User } = require('../modules/users')
+const jwt = require('jsonwebtoken')
 
 route.use(express.json())
 
 route.post("/", async(req, res) => {
 
-    const { error } = validate(req.body)
+    const { error } = validate(_.pick(req.body, ["email", "password"]))
     if (error) return res.status(400).send(error.details[0].message)
 
 
     const userCheck = await User.findOne({ email: req.body.email })
-    if (!userCheck) return res.status(500).send("invalid email or password ")
-    if (!(req.body.password == userCheck.password)) return res.status(500).send("invalid email or password ")
+    if (!userCheck) return res.status(500).send("invalid email ")
 
-    res.send(`welcome ${userCheck.name}`)
+    if (bcrypt.compare(userCheck.password, req.body.password)) {
+        let token = jwt.sign({ _id: userCheck.id }, "jwtprivatekey")
+        res.send(token)
+    }
 
 })
 
@@ -27,8 +32,8 @@ function validate(user) {
         password: Joi.string().max(1024).min(3).required()
 
     }
-    return Joi.validate(user, schema)
+    return Joi.validate(_.pick(user, ["email", "password"]), schema)
 }
 
 
-module.exports = routew
+module.exports = route

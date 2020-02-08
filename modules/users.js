@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const Joi = require('joi')
+const jwt = require('jsonwebtoken')
 mongoose.connect('mongodb://localhost/movie')
     .then(() => console.log("uwer mongodb is connected"))
     .catch(err => console.log(err.message))
@@ -25,6 +26,13 @@ const UserSchema = mongoose.Schema({
         maxLength: 1024
     }
 })
+
+UserSchema.methods.generaAuthToken = function() {
+
+    const token = jwt.sign({ _id: this._id }, 'jwtprivatetoken')
+    return token
+
+}
 
 function userValidation(user) {
     const schema = {
