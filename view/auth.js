@@ -18,8 +18,11 @@ route.post("/", async(req, res) => {
     if (!userCheck) return res.status(500).send("invalid email ")
 
     if (bcrypt.compare(userCheck.password, req.body.password)) {
-        let token = jwt.sign({ _id: userCheck.id }, "jwtprivatekey")
-        res.send(token)
+        let token = userCheck.gererateAuthtoken()
+        res.header("x-auth-token", token).send({
+            name: userCheck.name,
+            email: userCheck.email
+        })
     }
 
 })

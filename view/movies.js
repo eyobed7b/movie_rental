@@ -3,6 +3,7 @@ const gener = require('./genre')
 const route = express.Router();
 const Joi = require('joi')
 route.use(express.json());
+const auth = require('../midlleware/auth')
 const { Movie } = require('../modules/movies')
 
 
@@ -23,7 +24,7 @@ route.get('/:id', async(req, res) => {
 
 })
 
-route.put('/:id', async(req, res) => {
+route.put('/:id', auth, async(req, res) => {
     let movie = await Movie.findByIdAndUpdate(req.params.id, {
         name: res.body.name
     }, {
@@ -43,7 +44,7 @@ route.put('/:id', async(req, res) => {
 
 
 })
-route.post('/', async(req, res) => {
+route.post('/', auth, async(req, res) => {
 
     let genre = await gener.Genre.findById(req.body.genreId)
     console.log(genre)

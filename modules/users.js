@@ -5,7 +5,7 @@ mongoose.connect('mongodb://localhost/movie')
     .then(() => console.log("uwer mongodb is connected"))
     .catch(err => console.log(err.message))
 
-const UserSchema = mongoose.Schema({
+const UserSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -24,14 +24,13 @@ const UserSchema = mongoose.Schema({
         require: true,
         minLength: 3,
         maxLength: 1024
-    }
+    },
+    isAdmine: Boolean
 })
 
-UserSchema.methods.generaAuthToken = function() {
-
-    const token = jwt.sign({ _id: this._id }, 'jwtprivatetoken')
+UserSchema.methods.gererateAuthtoken = function() {
+    const token = jwt.sign({ _id: this._id, isAdmine: this.isAdmine }, "jsonPrivatekey")
     return token
-
 }
 
 function userValidation(user) {
@@ -45,6 +44,7 @@ function userValidation(user) {
 }
 
 const User = mongoose.model("users", UserSchema)
+
 
 exports.UserSchema = UserSchema,
     exports.User = User

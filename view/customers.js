@@ -2,6 +2,7 @@ const mongoose = require("mongoose")
 const express = require('express')
 const Customers = require('../modules/customers')
 const router = express.Router()
+const auth = require('../midlleware/auth')
     //
 
 
@@ -20,7 +21,7 @@ router.get('/:id', async(req, res) => {
     if (!customer) return res.status(404).send("customer is not found");
     res.send(customer)
 })
-router.post('/', async(req, res) => {
+router.post('/', auth, async(req, res) => {
     let customer = new Customers({
         isGold: true,
         name: req.body.name,
@@ -37,7 +38,7 @@ router.post('/', async(req, res) => {
 
 
 })
-router.put('/:id', async(req, res) => {
+router.put('/:id', auth, async(req, res) => {
     // let customer = await Customers.findByIdAndUpdate(req.params.id, { name: req.body.name, phone: req.body.phone }, { new: true })
     let customer = await Customers.findById(req.params.id)
     if (customer) {

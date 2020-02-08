@@ -2,6 +2,7 @@ const express = require('express');
 const { Rental } = require('../modules/rental')
 const customer = require('../modules/customers');
 const movie = require('../modules/movies')
+const auth = require('../midlleware/auth')
 
 
 
@@ -26,7 +27,7 @@ route.get('/:id', async(req, res) => {
     res.send(rental)
 
 })
-route.post('/', async(req, res) => {
+route.post('/', auth, async(req, res) => {
 
 
 

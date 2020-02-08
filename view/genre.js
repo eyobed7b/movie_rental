@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose')
 const route = express.Router();
 const Joi = require('joi')
+const auth = require('../midlleware/auth')
+const admine = require('../midlleware/admin')
 
 mongoose.connect('mongodb://localhost/movie')
     .then(() => console.log("genre mongodb is connected "))
@@ -30,7 +32,7 @@ route.get('/:id', async(req, res) => {
     res.send(genre)
 
 })
-route.post('/', async(req, res) => {
+route.post('/', auth, async(req, res) => {
     let genre = new Genre({
         name: req.body.name
     })
@@ -39,10 +41,15 @@ route.post('/', async(req, res) => {
     res.send(genre)
 
 })
-route.put('/:id', async(req, res) => {
+route.put('/:id', auth, async(req, res) => {
 
 })
-route.delete('/:id', async(req, res) => {
+route.delete('/:id', [auth, admine], async(req, res) => {
+    let genre = await Genre.findByIdAndDelete(req.params.id)
+    res.send("sertoal")
+    if (!genre) return res.status(401).send("gener is not found")
+    res.send("genre is deleted")
+    genre.save()
 
 })
 
