@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^3.0.8",
+    "config": "^3.2.5",
     "express": "^4.17.1",
     "fawn": "^2.1.5",
     "joi": "^14.3.1",
