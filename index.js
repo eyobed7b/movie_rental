@@ -8,7 +8,7 @@ const user = require('./view/users')
 const auth = require('./view/auth')
 
 
-//app.use(express.json())
+app.use(express.json())
 app.use('/api/users', user)
 app.use('/api/rentals', rental)
 app.use('/api/customers', customer)
